@@ -1,0 +1,13 @@
+/* Definição das variáveis globais de cores */
+:root {
+  --cor-primaria: rgb(178, 200, 240);
+  --cor-texto: #030303ff;
+  --cor-hover: #ec0b0bff;
+  --cor-sucesso: #198754; /* Verde do Bootstrap */
+  --cor-perigo: #dc3545;  /* Vermelho do Bootstrap */
+}
+
+/* Exemplo de uso da variável */
+.background-body {
+  background-color: var(--cor-primaria);
+}
