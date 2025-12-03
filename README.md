@@ -147,3 +147,14 @@ INSERT INTO `usuarios` (`id`, `nome`, `email`, `usuario`, `senha`, `tipo`) VALUE
 
 ```
 
+# Adicionando os Arquivos na Raiz do Projeto:
+
+  * index.html                    (vazio).
+  * login.php                     (vazio).
+  * pagina-protegida.php          (vazio).
+  * cadastrar.php                 (vazio).
+  * lista-usuario.php             (vazio).
+  * editar.php                    (vazio).
+  * delete.php                    (vazio).
+  * logout.php                    (vazio).
+
