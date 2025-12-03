@@ -158,3 +158,4 @@ INSERT INTO `usuarios` (`id`, `nome`, `email`, `usuario`, `senha`, `tipo`) VALUE
   * delete.php                    (vazio).
   * logout.php                    (vazio).
 
+# Nesse ponto a estrutura do sistema fica completa.
