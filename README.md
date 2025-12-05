@@ -3,7 +3,7 @@
 
 ## A estrutura 📂 de sistema de login se começa criando todos arquivos necessários:
 
-# Cria-se uma pasta-raiz dentro do diretório do localhost, com o nome do projeto (loginphppoo).
+## Cria-se uma pasta-raiz dentro do diretório do localhost, com o nome do projeto (loginphppoo).
 
 ```
 
@@ -34,7 +34,7 @@
 ```
 
 
-# Pastas Principais:
+## Pastas Principais:
 
 * **assets/:** 
   * Esta pasta contém todos os recursos estáticos, como folhas de estilo (CSS), 
@@ -50,7 +50,7 @@
   * aos usuários: conexão com o banco de dados, validação de login, proteção de páginas, cadastro, listagem, edição e exclusão de usuários.
 
 
-# Arquivos na Raiz do Projeto:
+## Arquivos na Raiz do Projeto:
 
 * **index.html:** 
   * A primeira página que o usuário vê. É uma página de apresentação simples com um botão para acessar a área de login.
@@ -70,7 +70,7 @@
   * Outro script sem interface. Ele chama o método logout() para destruir a sessão do usuário atual e redireciona para a página de login.
 
 
-# Banco de Dados:
+## Banco de Dados:
 
   * O sistema depende de um banco de dados para funcionar:
 
@@ -94,13 +94,13 @@
   ```
 
 
-# Finalidade da Tabela usuarios:
+## Finalidade da Tabela usuarios:
 
   * O objetivo principal desta tabela é guardar os dados de identificação e autenticação dos usuários.
   * É aqui que o sistema consulta para verificar se um login é válido e para determinar o que cada usuário pode fazer.
 
 
-# Detalhe das Colunas e as função de cada coluna na tabela usuarios:
+## Detalhe das Colunas e as função de cada coluna na tabela usuarios:
 
 * **id (int(11) NOT NULL)**
   * É um identificador numérico único para cada usuário. Funciona como a "carteira de identidade" de cada registro, garantindo que não haja dois usuários iguais e permitindo que outras partes do sistema (como a tabela de tokens auth_tokens que será criada) se refiram a um usuário específico. É a chave primária da tabela.
@@ -147,7 +147,7 @@ INSERT INTO `usuarios` (`id`, `nome`, `email`, `usuario`, `senha`, `tipo`) VALUE
 
 ```
 
-# Adicionando os Arquivos na Raiz do Projeto:
+## Adicionando os Arquivos na Raiz do Projeto:
 
   * index.html                    (vazio).
   * login.php                     (vazio).
@@ -158,4 +158,99 @@ INSERT INTO `usuarios` (`id`, `nome`, `email`, `usuario`, `senha`, `tipo`) VALUE
   * delete.php                    (vazio).
   * logout.php                    (vazio).
 
-# Nesse ponto a estrutura do sistema fica completa.
+## Nesse ponto a estrutura do sistema fica completa.
+
+
+# O Coração do Sistema (Classe Usuarios.php).
+
+# Esta classe é o coração do sistema de autenticação. Ela encapsula toda a lógica de negócio relacionada aos usuários: conexão com o banco de dados, login, logout, cadastro, listagem, atualização e exclusão.
+
+
+```
+
+class Usuarios
+{
+
+    private $table_name = "usuarios";
+
+    
+    protected $mysql;
+    protected $db = array(
+        'servidor'=>'localhost',
+        'database'=>'blog_usuario',
+        'usuario'=>'moises',
+        'senha'=>'39138431',
+    );
+    
+
+    public function __construct()
+    {
+        $this->conectaBd();
+    }
+
+
+    protected function conectaBd()
+    {
+        $this->mysql = new PDO(
+            'mysql:host='.$this->db['servidor'].';dbname='.$this->db['database'], $this->db['usuario'], $this->db['senha']
+        );
+        $this->mysql->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+
+}
+
+```
+
+* **private $table_name = "usuarios";:** 
+  * Declara uma propriedade privada chamada $table_name. Ela armazena o nome da tabela de usuários no banco de dados. Sendo private, só pode ser acessada de dentro desta mesma classe.
+
+* **protected $mysql;:** 
+    * Declara uma propriedade protegida que irá armazenar o objeto de conexão com 
+  o banco de dados (PDO). Sendo protected, pode ser acessada por esta classe e por qualquer classe que a herde.
+
+* **protected $db = array(...):** 
+  * Declara uma propriedade protegida que é um array contendo as credenciais de acesso ao banco de dados. 
+
+
+
+### É uma boa prática manter essas informações de configuração agrupadas.
+
+
+* **public function __construct():** 
+  * Este é o método construtor da classe. Ele é executado automaticamente
+  sempre que um novo objeto Usuarios é criado (ex: $usuarios = new Usuarios();).
+  * A expressão public function é usado em classes PHP para definir que um método ou propriedade pode ser acessado de qualquer lugar
+
+* **$this->conectaBd();:** 
+  * Dentro do construtor, ele chama o método conectaBd(), garantindo que a
+  conexão com o banco de dados seja estabelecida assim que a classe for instanciada.
+
+
+* **protected function conectaBd()**
+  * Cria a instância do objeto PDO para se conectar ao banco de dados MySQL, usando as credenciais da propriedade $db.
+  * A expressão protected function define um método protegido dentro de uma classe, é um modificador de visibilidade, que controla quem pode acessar o método
+
+  * $this->mysql->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);: 
+  Configura o PDO para lançar exceções em caso de erro, o que permite capturá-las com blocos try-catch.
+
+
+
+## Usar PDO (PHP Data Objects) é considerado mais seguro sobretudo por causa da forma como ele trata consultas parametrizadas e da abstração que aplica ao acesso ao banco de dados.
+
+  * Proteção contra SQL Injection 🔐
+
+  * O principal ganho de segurança é que o PDO permite (e incentiva) o uso de prepared statements com bind parameters.
+
+  * Isso separa dados de comandos SQL, impedindo que entradas maliciosas sejam interpretadas como instruções SQL.
+
+* **Usar PDO é mais seguro porque:**
+
+  * Garante tratamento seguro de parâmetros.
+
+  * Protege contra problemas de encoding e concatenação.
+
+  * Fornece API consistente e robusta.
+
+  * Melhora tratamento de erros e transações.
+
+
