@@ -254,3 +254,28 @@ class Usuarios
   * Melhora tratamento de erros e transações.
 
 
+## Criando página de boas-vindas "index.html":
+
+** *Estrutura HTML bem organizada**
+
+```
+  <!doctype html>
+
+  <html lang="pt-br">
+
+  <meta charset="utf-8">
+
+  <meta name="viewport">
+
+```
+
+  * Isso garante compatibilidade, acessibilidade e responsividade.
+
+  * Uso de Bootstrap
+
+  * A inclusão do Bootstrap melhora a responsividade e rapidez no desenvolvimento da interface.
+
+  * Texto explicativo claro
+
+  * O texto dentro do container apresenta bem a proposta do sistema.
+
