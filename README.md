@@ -279,3 +279,97 @@ class Usuarios
 
   * O texto dentro do container apresenta bem a proposta do sistema.
 
+
+## Criando a página de login: login.php
+
+  * Arquivo login.php com o formulário HTML (campos: usuário, senha e o checkbox "Lembrar de mim").
+
+## Criando método login() que realiza o lOgin do sistema.
+
+* **public function login()** 
+  * Define o método login como público, o que significa que ele pode ser chamado de 
+  fora da classe.
+
+* **$_SESSIOM**
+  * Inicia uma sessão PHP ou recupera uma já existente, permitindo o uso da variável global $_SESSION 
+  para armazenar e acessar dados do usuário durante a navegação.
+
+* **session_start();** 
+  * Esta é a primeira e mais importante etapa para trabalhar com sessões. Esta função 
+  verifica se já existe uma sessão para o usuário; se houver, ela a retoma. Se não, ela inicia uma nova 
+  sessão. Isso é essencial para que possamos armazenar o estado de "logado" do usuário.
+
+* **if ($_SERVER['REQUEST_METHOD']=='POST')** 
+  * O código dentro deste if só é executado quando a página recebe dados
+  de um formulário enviado com method="post".
+  Isso separa a lógica de processamento de login da simples exibição da página.
+  indicando que dados estão sendo enviados pelo formulário de login.
+
+* **$usuario=$this->retUsuario($_POST['usuario']);**
+  * Aqui, o sistema pega o nome de usuário enviado pelo formulário ($_POST['usuario']) 
+  e usa o método auxiliar retUsuario() para buscar no banco de dados o registro completo daquele usuário. 
+  O resultado (um array com os dados do usuário ou false se não for encontrado) é armazenado na variável $usuario.
+
+
+* **if (password_verify($_POST['senha'], $usuario['senha']))**
+  * Esta é a maneira correta e segura de verificar uma senha em PHP. 
+  A função password_verify() compara a senha em texto plano enviada pelo formulário ($_POST['senha']) com o hash 
+  seguro armazenado no banco de dados ($usuario['senha']).
+  Ela é projetada para ser resistente a ataques de tempo.
+
+
+* **if (password_needs_rehash(...))**
+  * Uma excelente prática de segurança, esta função verifica se o hash da senha no 
+  banco de dados foi criado com um algoritmo ou "custo" que não é mais o padrão (PASSWORD_DEFAULT). Se for o caso 
+  (por exemplo, se você aumentar o custo do hash no futuro), o sistema automaticamente gera um novo hash mais 
+  forte ($this->hash(...)) e o atualiza no banco de dados ($this->atualizarSenha(...)). Isso melhora a segurança 
+  do sistema ao longo do tempo, de forma transparente para o usuário.
+
+* **$_SESSION["usuario"] = $usuario;**
+  * Se a senha estiver correta, esta linha é a que efetivamente "loga" o 
+  usuário. Ela armazena todo o array de dados do usuário na sessão, tornando-o acessível em outras páginas protegidas.
+
+* **if (isset($_POST['lembrar']))**
+  * Verifica se a caixa "Lembrar de mim" foi marcada no formulário.
+
+* **$this->gerarEArmazenarTokens($usuario['id']);** 
+  * Se a caixa foi marcada, este método é chamado para criar e armazenar os tokens seguros no banco de dados 
+  e nos cookies do navegador, implementando a funcionalidade "Lembrar de mim" de forma segura.
+
+* **elseif (crypt(...))** 
+  * Este bloco serve como uma camada de compatibilidade para um método de hash mais antigo
+  e menos seguro (crypt). Se o password_verify falhar, ele tenta verificar a senha com este método legado.
+  * Se a verificação com crypt for bem-sucedida, ele imediatamente atualiza a senha para o novo formato seguro
+  com password_hash e então loga o usuário. Esta é uma estratégia de migração perfeita.
+
+* **else { ... }**
+  * Se nenhuma das verificações de senha (password_verify ou crypt) passar, significa 
+  que a senha está incorreta. O código então redireciona o usuário de volta para login.php, passando uma 
+  mensagem de erro pela URL (?msg=...).
+
+* **elseif (empty($_SESSION["usuario"]) && !empty($_COOKIE[...]))** 
+  * Este bloco é executado se o usuário não enviou um formulário de login e não está logado na sessão, 
+  mas possui os cookies remember_selector e remember_validator.
+
+* **$usuario = $this->validarTokenEAutenticar(...)** 
+* Ele chama o método que valida os tokens do cookie contra o banco de dados. 
+  Se a validação for bem-sucedida, o método retorna os dados do usuário.
+
+* **if ($usuario) { $_SESSION["usuario"] = $usuario; }**
+  * Se a validação do token retornou um usuário válido, ele é logado na sessão, completando a autenticação automática.
+
+
+* **if (!empty($_SESSION["usuario"]))** 
+  * Após a execução dos blocos anteriores, este if final verifica se o usuário está, 
+  de fato, logado (ou seja, se $_SESSION["usuario"] foi preenchido).
+
+* **if (empty($_SESSION["url"]))** 
+  * Verifica se o usuário autenticado está salvo na sessão.
+  Ele verifica se existe uma URL de destino armazenada na sessão.
+  Essa URL é geralmente definida pelo método protege() quando um usuário não logado tenta acessar uma página restrita.
+  Se não houver uma URL de destino, ele redireciona para a página principal (index.html).
+  Se houver uma URL de destino, ele redireciona o usuário de volta para a página que ele tentou acessar originalmente. 
+  Isso proporciona uma experiência de usuário muito mais fluida.
+
+
+
