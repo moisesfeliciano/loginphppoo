@@ -373,3 +373,21 @@ class Usuarios
 
 
 
+* **public function cadastrar()**
+
+# Método para cadastrar um novo usuário
+
+* **if ($_SERVER['REQUEST_METHOD']=='POST')**
+  * Garante que o código de cadastro só rode quando o formulário de cadastro for enviado.
+
+* **$sql="INSERT INTO ...";** 
+  * Monta a query SQL para inserir um novo usuário.
+
+* **$mysql->bindValue(...)**
+  * Associa os dados do formulário ($_POST) aos parâmetros da query de forma segura.
+
+* **$mysql->bindValue(':senha', $this->hash($_POST['senha']), ...)** 
+  * Crucial para a segurança, ele não salva a senha diretamente, mas sim o hash dela, gerado pelo método hash().
+
+* **header('Location: confirma-cadastro.php');** 
+* Após o cadastro, redireciona para uma página de confirmação.

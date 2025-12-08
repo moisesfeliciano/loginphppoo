@@ -102,6 +102,28 @@ class Usuarios
         }
         
     }
+    
+
+    public function cadastrar()
+    {
+        if ($_SERVER['REQUEST_METHOD']=='POST') {
+            $sql="INSERT INTO " . $this->table_name . "(`nome`,`email`,`usuario`,`tipo`,`senha`) VALUES (:nome,:email,:usuario,:tipo,:senha);";
+            $mysql=$this->mysql->prepare($sql);
+            $mysql->bindValue(':nome', $_POST['nome'],PDO::PARAM_STR);
+            $mysql->bindValue(':email', $_POST['email'],PDO::PARAM_STR);
+            $mysql->bindValue(':usuario', $_POST['usuario'],PDO::PARAM_STR);
+            $mysql->bindValue(':tipo', $_POST['tipo'],PDO::PARAM_STR);
+            $mysql->bindValue(':senha', $this->hash($_POST['senha']),PDO::PARAM_STR);
+            $mysql->execute();
+
+            $msg = $_POST['nome'] . " Cadastrado com sucesso!";
+            header('Location: lista-usuario.php?msg=' . urlencode($msg));
+
+            exit();
+        }
+    }
+
+
 
 
 }
