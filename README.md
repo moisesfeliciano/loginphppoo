@@ -393,7 +393,30 @@ class Usuarios
 * Após o cadastro, redireciona para lista-usuario.php.
 
 
+
 ## Criando o método protege() na classe Usuarios
 
   * Ele verifica se $_SESSION["usuario"] existe e, se não existir, redireciona para login.php.
 
+
+
+## Adicionando código na pagina-protegida.php
+
+* **require 'php/Usuarios.php';**
+  * Importa o arquivo Usuarios.php, localizado dentro da pasta php.
+
+* **$usuarios->protege();**
+  * Chama o método protege() do objeto $usuarios.
+
+* **$usuarios = new Usuarios();**
+  * Cria um objeto da classe Usuarios.
+
+* **$usuarios->protege();**
+  * Bloquear acesso a páginas protegidas.
+
+
+### Nessa paǵina é onde fica o Menu principal que dá acesso as outras paginas:
+
+  * Botão para cadastrar um novo usuário.
+  * Botão para listar todos os usuários cadastrados.
+  * Botão para acessar o painel financeiro.
