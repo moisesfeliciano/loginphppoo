@@ -389,5 +389,11 @@ class Usuarios
 * **$mysql->bindValue(':senha', $this->hash($_POST['senha']), ...)** 
   * Crucial para a segurança, ele não salva a senha diretamente, mas sim o hash dela, gerado pelo método hash().
 
-* **header('Location: confirma-cadastro.php');** 
-* Após o cadastro, redireciona para uma página de confirmação.
+* **header('Location: lista-usuario.php');** 
+* Após o cadastro, redireciona para lista-usuario.php.
+
+
+## Criando o método protege() na classe Usuarios
+
+  * Ele verifica se $_SESSION["usuario"] existe e, se não existir, redireciona para login.php.
+

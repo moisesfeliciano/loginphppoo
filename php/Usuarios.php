@@ -124,6 +124,22 @@ class Usuarios
     }
 
 
+    public function protege()
+    {
+        session_start();
+
+       
+        if (!isset($_SESSION["usuario"]) || empty($_SESSION["usuario"])) {
+            $_SESSION["url"] = $_SERVER['REQUEST_URI'];
+            header('Location: login.php');
+            exit(); 
+        }
+
+        
+        $usuario = $_SESSION["usuario"] ?? null;
+    }
+
+
 
 
 }
