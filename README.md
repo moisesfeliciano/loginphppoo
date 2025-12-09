@@ -420,3 +420,37 @@ class Usuarios
   * Botão para cadastrar um novo usuário.
   * Botão para listar todos os usuários cadastrados.
   * Botão para acessar o painel financeiro.
+
+
+
+## Criando o método logout()
+
+  * **public function logout()** 
+  * Método para fazer o logout do sistema de forma segura
+
+* **session_start()** 
+  * Esta função verifica se já existe uma sessão para o usuário e, se houver, a carrega. 
+  É um passo necessário para que o PHP possa manipular os dados da sessão que está prestes a ser encerrada.
+
+* **session_unset();** 
+  * Libera (remove) todas as variáveis que foram registradas na sessão atual. Por exemplo, a variável $_SESSION["usuario"], 
+  que armazena os dados do usuário logado, é apagada da memória.
+
+* **session_destroy();** 
+  * Este é o passo final para encerrar a sessão no lado do servidor. Ele destrói todos os dados associados ao ID da sessão atual. 
+  Após esta chamada, o usuário não está mais autenticado no servidor.
+
+* **$this->limparTokensAoLogout();**
+  * responsável por remover os cookies remember_selector e remember_validator do navegador do usuário e apagar o token
+  correspondente do banco de dados. Isso garante que a funcionalidade "Lembrar de mim" seja desativada, impedindo 
+  um login automático na próxima visita.
+
+* **header('Location: index.html');** 
+  * Envia um cabeçalho HTTP para o navegador do usuário, instruindo-o a redirecionar para a página index.html. É assim que o 
+  usuário é levado para a página inicial após o logout ser processado.
+
+
+* **exit();**
+  * Termina a execução do script PHP imediatamente. É uma prática de segurança crucial usar exit() após um 
+  redirecionamento com header(). Isso impede que qualquer código restante na página seja executado 
+  acidentalmente, garantindo que o redirecionamento ocorra sem interferências.
