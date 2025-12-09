@@ -162,6 +162,15 @@ class Usuarios
 
 
 
+    protected function retUsuario($usuario)
+    {
+        $sql="SELECT * FROM " . $this->table_name . " WHERE  " . $this->table_name . " . `usuario` = :usuario";
+        $mysql=$this->mysql->prepare($sql);
+        $mysql->bindValue(':usuario', $usuario,PDO::PARAM_STR);
+        $mysql->execute();
+        return $mysql->fetch(PDO::FETCH_ASSOC);
+    }
+
 
 }
 
