@@ -491,3 +491,11 @@ class Usuarios
   * Ter acesso ao Menu Principal do sistema, com os botões de Cadastrar, Listar Usuários, acessar o Painel Financeiro e Sair.
   * Se clicar no botão Cadastrar você terá acesso ao formulário de cadastro de usuário.
   * Se clicar no botão Litar Usuários você terá acesso a lista de usuarios do sistema.
+
+
+## Implementando o método hashSenha() na classe Usuarios
+
+* **Método hash($senha)**
+  * Centraliza a lógica de hashing de senha. 
+  Usa a função password_hash do PHP, que é a maneira recomendada e mais segura de criar hashes de senha.
+  PASSWORD_DEFAULT garante que o PHP sempre usará o algoritmo de hash mais forte disponível.
