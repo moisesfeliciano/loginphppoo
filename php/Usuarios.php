@@ -152,6 +152,15 @@ class Usuarios
     }
 
 
+    public function listarUsuarios()
+    {
+        $sql = "SELECT * FROM " . $this->table_name;
+        $stmt = $this->mysql->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
 
 
 }

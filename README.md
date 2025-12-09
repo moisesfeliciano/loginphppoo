@@ -454,3 +454,30 @@ class Usuarios
   * Termina a execução do script PHP imediatamente. É uma prática de segurança crucial usar exit() após um 
   redirecionamento com header(). Isso impede que qualquer código restante na página seja executado 
   acidentalmente, garantindo que o redirecionamento ocorra sem interferências.
+
+
+
+
+
+
+## Criando o método listarUsuarios() e adicionando código no arquivo lista-usuario.php
+
+* **public function listarUsuarios()** 
+  * método que lista os usuários cadastrados no sistema
+
+* **$sql = "SELECT * FROM " . $this->table_name;** 
+  * Monta a string da consulta SQL para selecionar todos (*) os registros da tabela de usuários.
+
+* **$stmt = $this->mysql->prepare($sql);** 
+  * Prepara a consulta SQL para execução. Usar prepare é uma prática
+  recomendada para evitar ataques e segurança essencial para prevenir injeção de SQL.
+
+* **$stmt->execute();** 
+  * Executa a consulta preparada.
+
+* **return $stmt->fetchAll(PDO::FETCH_ASSOC);** 
+  * Busca todos os resultados da consulta e os retorna como um array associativo, onde as chaves
+  do array são os nomes das colunas da tabela.
+
+
+
