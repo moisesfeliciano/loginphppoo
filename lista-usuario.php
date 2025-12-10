@@ -134,6 +134,7 @@
           <thead>
           <tr>
             <th scope="col">NOME</th>
+            <th scope="col">USUÁRIO</th>
             <th scope="col">EMAIL</th>
             <th scope="col">TIPO</th>
           </tr>
@@ -147,6 +148,7 @@
           <tbody>
 			<tr>
 			<td class="list"><?php echo $usuario['nome'];?></td>
+      <td class="list"><?php echo $usuario['usuario'];?></td>
 			<td class="list"><?php echo $usuario['email'];?></td>
 			<td class="list"><?php echo $usuario['tipo'];?></td>
 			<td class="list editar">

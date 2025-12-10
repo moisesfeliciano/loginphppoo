@@ -579,3 +579,6 @@ class Usuarios
 * **error_log(...)** 
   * No bloco catch, registra o erro detalhado no log de erros do servidor, uma prática muito 
   melhor do que exibir o erro para o usuário.
+
+
+# Adicionando coluna "USUÁRIO" na tabela Lista Usuário do arquivo lista-usuario.php.
