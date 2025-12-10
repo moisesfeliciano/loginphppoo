@@ -60,6 +60,10 @@
       .col-md-8 {
         margin: 0 auto;
       }
+
+      .background-body {
+        text-align: left;
+      }
     
     </style>
 

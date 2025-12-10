@@ -486,11 +486,15 @@ class Usuarios
   partir do seu nome de usuario. É usado principalmente no processo de login.
 
 
+
+
 ## Apartir desse ponto já é possível fazer o login
 
   * Ter acesso ao Menu Principal do sistema, com os botões de Cadastrar, Listar Usuários, acessar o Painel Financeiro e Sair.
   * Se clicar no botão Cadastrar você terá acesso ao formulário de cadastro de usuário.
   * Se clicar no botão Litar Usuários você terá acesso a lista de usuarios do sistema.
+
+
 
 
 ## Implementando o método hashSenha() na classe Usuarios
@@ -499,3 +503,79 @@ class Usuarios
   * Centraliza a lógica de hashing de senha. 
   Usa a função password_hash do PHP, que é a maneira recomendada e mais segura de criar hashes de senha.
   PASSWORD_DEFAULT garante que o PHP sempre usará o algoritmo de hash mais forte disponível.
+
+
+
+
+## Inserindo formulário de edição de usuarios no arquivo editar.php
+
+* **($_SERVER['REQUEST_METHOD'] === 'POST')**
+  * Processa o formulário quando enviado.
+
+* **$resultado = $usuarios->atualizar($id, $nome, $email, $usuario, $tipo, $senha);**
+  * Atualiza o usuário pelo método atualizar().
+
+* **if ($resultado) {**
+  * Se $resultado for True recebe mensagem de Atualizado com sucesso!
+  * Se $resultado for false recebe mensagem de Não Atualizado!
+
+* **(isset($_GET['id']) && is_numeric($_GET['id']) && $_GET['id'] > 0)**
+  * Recebendo e validando ID.
+
+* **$usuario = $usuarios->buscarPorId($id);**
+  * busca no banco de dados o usuário pelo ID pelo método buscarPorId($id) para preencher
+  o formulário com os dados do usuário que vai ser editado.
+
+
+
+
+
+## Implementando método buscarPorId($id) na classe Usuarios
+
+* **public function buscarPorId($id)** 
+  * método que um usuário pelo seu ID
+
+* **$sql = "SELECT * FROM " . $this->table_name;** 
+  * Monta a string da consulta SQL para selecionar todos (*) os registros da tabela de usuários.
+
+* **$stmt = $this->mysql->prepare($sql);** 
+  * Prepara a consulta SQL para execução. Usar prepare é uma prática
+  recomendada para evitar ataques de injeção de SQL.
+
+* **$stmt->bindValue(':id', $id, PDO::PARAM_INT);**
+  * segurança essencial para prevenir injeção de SQL.
+
+* **$stmt->execute();** 
+  * Executa a consulta preparada.
+
+* **return $stmt->fetchAll(PDO::FETCH_ASSOC);**
+  * Busca todos os resultados da consulta e os retorna como
+  um array associativo, onde as chaves do array são os nomes das colunas da tabela.
+
+
+
+
+## Implementando método atualizar() na classe Usuarios
+
+* **public function atualizar(..., $senha = null)** 
+  * Define o método para atualizar um usuário. O 
+  parâmetro $senha é opcional; se não for fornecido, seu valor será null.
+
+* **try { ... } catch (PDOException $e) { ... }** 
+  * Usa um bloco try-catch para tratamento de erros. Se  algo der errado com a consulta ao banco, 
+  o código dentro do catch será executado.
+
+* **if ($senha)** 
+  * Verifica se uma nova senha foi fornecida.
+  Se $senha existir, a query SQL UPDATE incluirá o campo senha. O valor da senha é processado pelo método $this->hash($senha) antes de ser salvo.
+  Se $senha for null, a query UPDATE não incluirá o campo senha, preservando a senha atual do usuário.
+
+* **$stmt->bindValue(...)** 
+  * Associa os valores das variáveis aos marcadores na consulta SQL, de forma segura.
+
+* **return $stmt->execute();** 
+  * Executa a atualização e retorna true se for bem-sucedida ou false caso contrário.
+
+* **error_log(...)** 
+  * No bloco catch, registra o erro detalhado no log de erros do servidor, uma prática muito 
+  melhor do que exibir o erro para o usuário.

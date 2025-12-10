@@ -21,18 +21,6 @@ class Usuarios
     }
 
 
-    protected function conectaBd()
-    {
-        $this->mysql = new PDO(
-            'mysql:host='.$this->db['servidor'].';dbname='.$this->db['database'], $this->db['usuario'], $this->db['senha']
-        );
-        $this->mysql->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    }
-
-
-
-    
-
     public function login()
     {
 
@@ -161,6 +149,66 @@ class Usuarios
     }
 
 
+    public function buscarPorId($id)
+    {
+        $sql = "SELECT * FROM " . $this->table_name . " WHERE id = :id";
+        $stmt = $this->mysql->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+    public function atualizar($id, $nome, $email, $usuario, $tipo, $senha = null) {
+        try {
+            
+            if ($senha) {
+                $sql = "UPDATE  " . $this->table_name .
+                        " SET nome = :nome, email = :email, usuario = :usuario, tipo = :tipo, senha = :senha 
+                        WHERE id = :id";
+                $stmt = $this->mysql->prepare($sql);
+                $stmt->bindValue(':senha', $this->hash($senha));
+            } else {
+                $sql = "UPDATE  " . $this->table_name .
+                        " SET nome = :nome, email = :email, usuario = :usuario, tipo = :tipo
+                        WHERE id = :id";
+                $stmt = $this->mysql->prepare($sql);
+            }
+            
+            $stmt->bindValue(':nome', $nome);
+            $stmt->bindValue(':email', $email);
+            $stmt->bindValue(':usuario', $usuario);
+            $stmt->bindValue(':tipo', $tipo);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Erro detalhado na atualização: " . $e->getMessage());
+            return false;
+        }
+    }
+
+
+
+
+
+
+
+    // MÉTODOS PROTEGIDOS
+
+
+
+    protected function conectaBd()
+    {
+        $this->mysql = new PDO(
+            'mysql:host='.$this->db['servidor'].';dbname='.$this->db['database'], $this->db['usuario'], $this->db['senha']
+        );
+        $this->mysql->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+
+
+
+    
 
     protected function retUsuario($usuario)
     {
@@ -176,6 +224,8 @@ class Usuarios
     {
         return password_hash($senha, PASSWORD_DEFAULT);
     }
+
+
 
 
 }
