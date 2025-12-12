@@ -581,4 +581,8 @@ class Usuarios
   melhor do que exibir o erro para o usuário.
 
 
-# Adicionando coluna "USUÁRIO" na tabela Lista Usuário do arquivo lista-usuario.php.
+## Adicionando coluna "USUÁRIO" na tabela Lista Usuário do arquivo lista-usuario.php.
+
+
+
+## Adicionando código no arquivo logout.php que simplismente chama o método logout() da classe Usuarios.

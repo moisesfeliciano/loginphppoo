@@ -133,8 +133,6 @@ class Usuarios
         session_start();
         session_unset();
         session_destroy();
-        
-        $this->limparTokensAoLogout();
         header('Location: index.html');
         exit();
     }
