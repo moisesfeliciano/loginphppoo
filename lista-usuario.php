@@ -29,6 +29,11 @@
 
 	}
 
+    var mensagem = <?php echo json_encode($msg); ?>;
+        if (mensagem) {
+            alert(mensagem);
+        }
+
 	</script>
 
     <style>
@@ -76,27 +81,27 @@
 
     
 
-	.table {
-		background-color: rgba(253, 253, 253, 1);
-	}
+    .table {
+      background-color: rgba(253, 253, 253, 1);
+    }
 
-	table .editar {
-		background-color: rgba(29, 32, 214, 1);
-		text-align: center;
-	}
+    table .editar {
+      background-color: rgba(29, 32, 214, 1);
+      text-align: center;
+    }
 
-	table .excluir {
-		background-color: rgba(214, 41, 29, 1);
-		text-align: center;
-	}
+    table .excluir {
+      background-color: rgba(214, 41, 29, 1);
+      text-align: center;
+    }
 
-	table a {
-		color: white;
-	}
+    table a {
+      color: white;
+    }
 
-	table a:hover {
-		color: yellow;
-	}
+    table a:hover {
+      color: yellow;
+    }
 
 
 
@@ -104,17 +109,6 @@
 
     
   </head>
-
-
-
-  <script>
-      var mensagem = <?php echo json_encode($msg); ?>;
-      if (mensagem) {
-          alert(mensagem);
-      }
-  </script>
-
-
 
   <body class="text background-body">   
     <main>

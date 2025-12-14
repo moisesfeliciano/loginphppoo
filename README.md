@@ -586,3 +586,35 @@ class Usuarios
 
 
 ## Adicionando código no arquivo logout.php que simplismente chama o método logout() da classe Usuarios.
+
+
+
+
+## Adicionando método deleteUsuario($id) na classe Usuarios
+
+  * Executa uma operação DELETE para remover um usuário do banco de dados com base no id fornecido, 
+    usando um prepared statement para segurança.
+
+
+* **Bloco ' try '**
+  * O código dentro deste bloco será executado. Se ocorrer um erro (uma "exceção") relacionado ao banco de dados (PDOException), a execução salta imediatamente para o bloco 'catch'. Isso previne que o script quebre inesperadamente e permite um tratamento de erro elegante.
+
+  * A função JavaScript confirmaExclusao() em lista-usuario.php para uma melhor experiência do usuário.
+
+* **Bloco ' catch '**
+  * Este bloco é executado para capturar exceções do PDO.
+  * Este bloco só é executado se um erro do tipo PDOException ocorrer no bloco 'try' (por exemplo, falha de conexão, erro de sintaxe SQL, etc.). A variável $e conterá um objeto com os detalhes do erro.
+
+
+  
+
+## Adicionando código no arquivo delete.php
+
+* **if (isset($_GET['id']))**
+  * Verifica se um parâmetro chamado 'id' foi enviado na URL via método GET.
+
+* **$usuarios->deleteUsuario($_GET['id']);**
+  * Chama o método deleteUsuario(), Se o 'id' exixtir deleta o usuário.
+
+* **header('Location: lista-usuario.php');**
+  * Redireciona o usuário

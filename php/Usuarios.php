@@ -186,7 +186,19 @@ class Usuarios
         }
     }
 
-
+    public function deleteUsuarios($id)
+    {
+        try {
+            $sql = "DELETE FROM " . $this->table_name . " WHERE id = :id";
+            $stmt = $this->mysql->prepare($sql);
+            $stmt->bindvalue(':id', $id, PDO::PARAM_INT);
+            return $stmt->execute(); // Retorna true em caso de sucesso, false em caso de falha.
+        } catch (PDOException $e) {
+            // Em um ambiente de produção, registre o erro em um arquivo de log.
+            error_log("Erro ao deletar usuário: " . $e->getMessage());
+            return false; // Indica que a operação falhou.
+        }
+    }
 
 
 
