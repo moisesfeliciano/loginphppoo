@@ -145,12 +145,18 @@
       <td class="list"><?php echo $usuario['usuario'];?></td>
 			<td class="list"><?php echo $usuario['email'];?></td>
 			<td class="list"><?php echo $usuario['tipo'];?></td>
+
+    <?php if(isset($_SESSION['usuario']) && $_SESSION['usuario']['tipo'] == 'adm'): ?>
+
 			<td class="list editar">
 				<a class="" href="editar.php?id=<?php echo $usuario['id']; ?>">Editar</a>
 			</td>
 			<td class="list excluir">
 				<a class="" href="#" onclick='confirmaExclusao(<?php echo $usuario["id"]; ?>)' >Excluir</a>
 			</td>
+
+    <?php endif; ?>
+
 			</tr>
 			<?php  } ?>
 			<!-- Finaliza o loop -->

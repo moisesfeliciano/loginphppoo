@@ -618,3 +618,135 @@ class Usuarios
 
 * **header('Location: lista-usuario.php');**
   * Redireciona o usuário
+
+
+## Protegendo partes do layout para que apenas usuários específicos tenham acesso:
+
+
+### proteger áreas sensíveis (como o Painel Financeiro, botões de editar e excluir) para que apenas o Administrador tenha controle total, deixando a interface do Usuário Comum muito mais segura e limpa.
+
+### Originalmente, as opções de Cadastro, Listagem, Painel Financeiro, Editar e Excluir usuaŕios, apareciam para todos os níveis de acesso.
+
+
+
+
+> Para resolver isso no PHP, utilizamos uma estrutura de controle condicional diretamente no HTML. Olhe este bloco de código:
+
+```
+<?php if(isset($_SESSION['usuario']) && $_SESSION['usuario']['tipo'] == 'adm'): ?>
+    
+<?php endif; ?>
+
+```
+
+### Explicação Passo a Passo, vamos entender o que está acontecendo aqui:
+
+* **isset($_SESSION['usuario']):**
+  * Primeiro, verificamos se existe uma sessão ativa. Isso evita erros caso o usuário nem tenha feito login.
+
+* **&&:**
+  * Este é o operador '&', Ele garante que as duas condições sejam verdadeiras ao mesmo tempo.
+
+* **$_SESSION['usuario']['tipo'] == 'adm':**
+  * Aqui está o filtro real, o PHP olha dentro dos dados do usuário logado e verifica se o 'tipo' dele é exatamente 'adm'.
+
+* **Os dois pontos (:) e o endif;:**
+  * Essa é a sintaxe alternativa do PHP, perfeita para organizar o código quando misturamos lógica com tags HTML, deixando tudo mais limpo e legível."
+
+
+> Para implementar essa restrição, será preciso colocar essa estrutura de controle condicional diretamente no código HTML da página do Menu Usuários:
+
+
+```PHP
+
+      <div class="row align-items-md-stretch">
+        <?php if(isset($_SESSION['usuario']) && $_SESSION['usuario']['tipo'] == 'adm'): ?>
+
+          <div class="col-md-4">
+            <div class="h-100 p-5 text-bg-success rounded-3">
+              <h2>Cadastro Usuários</h2>
+              <hr>
+              <br>
+              <p>Clique no botão abaixo para cadastrar um novo usuário.</p>
+              <button class="btn btn-light" type="button"><a href="cadastrar.php">Cadastrar</a></button>
+            </div>
+          </div>
+
+        <?php endif; ?>
+
+          <div class="col-md-4">
+            <div class="h-100 p-5 text-bg-primary border rounded-3">
+              <h2>Listar Usuários</h2>
+              <hr>
+              <br>
+              <p>Clique no botão abaixo para listar todos os usuários cadastrados.</p>
+              <button class="btn btn-light" type="button"><a href="lista-usuario.php">Listar Usuários</a></button>
+            </div>
+          </div>
+
+        <?php if(isset($_SESSION['usuario']) && $_SESSION['usuario']['tipo'] == 'adm'): ?>
+
+          <div class="col-md-4">
+            <div class="h-100 p-5 text-bg-dark border rounded-3">
+              <h2>Painel Financeiro</h2>
+              <hr>
+              <br>
+              <p>Clique no botão abaixo para acessar o painel financeiro.</p>
+              <button class="btn btn-light" type="button">Acessar</button>
+            </div>
+          </div>
+
+        <?php endif; ?>
+
+        </div>
+        <footer class="pt-3 mt-4 text-muted border-top">
+
+```
+
+
+
+> Também será preciso colocar a mesma estrutura de controle condicional diretamente no código HTML da página com a lista de Usuários:
+
+```PHP
+          <tr>
+            <th scope="col">NOME</th>
+            <th scope="col">USUÁRIO</th>
+            <th scope="col">EMAIL</th>
+            <th scope="col">TIPO</th>
+          </tr>
+		  <?php 
+        
+			$lista = $usuarios->listarUsuarios();
+			foreach ($lista as $usuario) {
+			
+			?>
+          </thead>
+          <tbody>
+			<tr>
+			<td class="list"><?php echo $usuario['nome'];?></td>
+      <td class="list"><?php echo $usuario['usuario'];?></td>
+			<td class="list"><?php echo $usuario['email'];?></td>
+			<td class="list"><?php echo $usuario['tipo'];?></td>
+
+    <?php if(isset($_SESSION['usuario']) && $_SESSION['usuario']['tipo'] == 'adm'): ?>
+
+			<td class="list editar">
+				<a class="" href="editar.php?id=<?php echo $usuario['id']; ?>">Editar</a>
+			</td>
+			<td class="list excluir">
+				<a class="" href="#" onclick='confirmaExclusao(<?php echo $usuario["id"]; ?>)' >Excluir</a>
+			</td>
+
+    <?php endif; ?>
+
+			</tr>
+      <?php  } ?>
+			<!-- Finaliza o loop -->
+		</tbody>
+        </table>
+
+```
+
+## Conclusão e Resultado:
+
+"Se o usuário for um administrador, o HTML que está ali no meio será renderizado normalmente. Se não for, o PHP simplesmente pula esse bloco e nada é enviado para o navegador do cliente. É uma forma simples e eficiente de garantir a segurança da interface!"

@@ -72,6 +72,9 @@
         </div>
         </header>
         <div class="row align-items-md-stretch">
+        
+        <?php if(isset($_SESSION['usuario']) && $_SESSION['usuario']['tipo'] == 'adm'): ?>
+
           <div class="col-md-4">
             <div class="h-100 p-5 text-bg-success rounded-3">
               <h2>Cadastro Usuários</h2>
@@ -81,6 +84,9 @@
               <button class="btn btn-light" type="button"><a href="cadastrar.php">Cadastrar</a></button>
             </div>
           </div>
+
+        <?php endif; ?>
+
           <div class="col-md-4">
             <div class="h-100 p-5 text-bg-primary border rounded-3">
               <h2>Listar Usuários</h2>
@@ -90,6 +96,9 @@
               <button class="btn btn-light" type="button"><a href="lista-usuario.php">Listar Usuários</a></button>
             </div>
           </div>
+
+        <?php if(isset($_SESSION['usuario']) && $_SESSION['usuario']['tipo'] == 'adm'): ?>
+
           <div class="col-md-4">
             <div class="h-100 p-5 text-bg-dark border rounded-3">
               <h2>Painel Financeiro</h2>
@@ -99,6 +108,9 @@
               <button class="btn btn-light" type="button">Acessar</button>
             </div>
           </div>
+
+        <?php endif; ?>
+
         </div>
         <footer class="pt-3 mt-4 text-muted border-top">
           &copy; 2025
