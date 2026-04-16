@@ -750,3 +750,5 @@ class Usuarios
 ## Conclusão e Resultado:
 
 "Se o usuário for um administrador, o HTML que está ali no meio será renderizado normalmente. Se não for, o PHP simplesmente pula esse bloco e nada é enviado para o navegador do cliente. É uma forma simples e eficiente de garantir a segurança da interface!"
+
+

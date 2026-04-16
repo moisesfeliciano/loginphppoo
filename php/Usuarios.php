@@ -112,6 +112,16 @@ class Usuarios
     }
 
 
+    public function atualizarSenha($id, $novoHash)
+    {
+        $sql = "UPDATE " . $this->table_name . " SET senha = :senha WHERE id = :id";
+        $stmt = $this->mysql->prepare($sql);
+        $stmt->bindValue(':senha', $novoHash, PDO::PARAM_STR);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+
     public function protege()
     {
         session_start();
@@ -131,6 +141,7 @@ class Usuarios
     public function logout()
     {
         session_start();
+        $this->limparTokensAoLogout();
         session_unset();
         session_destroy();
         header('Location: index.html');
@@ -192,16 +203,71 @@ class Usuarios
             $sql = "DELETE FROM " . $this->table_name . " WHERE id = :id";
             $stmt = $this->mysql->prepare($sql);
             $stmt->bindvalue(':id', $id, PDO::PARAM_INT);
-            return $stmt->execute(); // Retorna true em caso de sucesso, false em caso de falha.
+            return $stmt->execute();
         } catch (PDOException $e) {
-            // Em um ambiente de produção, registre o erro em um arquivo de log.
             error_log("Erro ao deletar usuário: " . $e->getMessage());
-            return false; // Indica que a operação falhou.
+            return false;
         }
     }
 
 
 
+
+
+    protected function gerarEArmazenarTokens($user_id)
+    {
+        $selector = bin2hex(random_bytes(8));
+        $validator = bin2hex(random_bytes(32));
+        $hashed_validator = hash('sha256', $validator);
+        $expires = date('Y-m-d H:i:s', time() + 864000); // Expira em 10 dias
+
+        $sql = "INSERT INTO auth_tokens (selector, hashed_validator, user_id, expires) 
+                VALUES (:selector, :hashed_validator, :user_id, :expires)";
+        $stmt = $this->mysql->prepare($sql);
+        $stmt->execute([
+            ':selector' => $selector,
+            ':hashed_validator' => $hashed_validator,
+            ':user_id' => $user_id,
+            ':expires' => $expires
+        ]);
+
+        setcookie('remember_selector', $selector, time() + 864000, '/', '', false, true);
+        setcookie('remember_validator', $validator, time() + 864000, '/', '', false, true);
+    }
+
+    protected function validarTokenEAutenticar($selector, $validator)
+    {
+        $sql = "SELECT t.*, u.* FROM auth_tokens t 
+                JOIN " . $this->table_name . " u ON t.user_id = u.id 
+                WHERE t.selector = :selector AND t.expires > NOW()";
+        
+        $stmt = $this->mysql->prepare($sql);
+        $stmt->bindValue(':selector', $selector);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row && hash_equals($row['hashed_validator'], hash('sha256', $validator))) {
+            
+            return $row;
+        }
+
+        return false;
+    }
+
+    protected function limparTokensAoLogout()
+    {
+        if (isset($_COOKIE['remember_selector'])) {
+            $selector = $_COOKIE['remember_selector'];
+            
+            $sql = "DELETE FROM auth_tokens WHERE selector = :selector";
+            $stmt = $this->mysql->prepare($sql);
+            $stmt->bindValue(':selector', $selector);
+            $stmt->execute();
+
+            setcookie('remember_selector', '', time() - 3600, '/');
+            setcookie('remember_validator', '', time() - 3600, '/');
+        }
+    }
 
 
     // MÉTODOS PROTEGIDOS
